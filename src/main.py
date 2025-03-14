@@ -9,38 +9,6 @@ from jsonschema import validate
 
 
 
-
-
-# def validate_vriables():
-
-#     # Define the schema for validation
-    # schema = {
-    # "type": "array",
-    # "items": {
-    #     "type": "object",
-    #     "properties": {
-    #         "machine_name": {"type": "string"},
-    #         "oc": {"type": "string"},
-    #         "cpu": {"type": "integer"},
-    #         "memory": {"type": "integer"},
-    #         },
-    #     "required": ["machine_name", "oc","cpu","memory"]
-    #     }
-    # }
-
-#     try:
-#         validate(instance=list_name, schema=schema)
-#         print("Data is valid.")
-#         return True
-#     except jsonschema.exceptions.ValidationError as e:
-#         print(f"Data validation failed: {e.message}")
-#         return False
-
-
-
-
-
-
 logging.basicConfig(
     level=logging.INFO,  # Log level
     format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
@@ -128,24 +96,42 @@ def validated_Memory(memory):
 
 
 # A function that checks the validity of the values ​​that the user entered into the system.
-def validated_user_machine(vm_name,oc,cpu,memory):
+def validated_user_machine_input(vm_name,oc,cpu,memory):
     if validate_name(vm_name) and validate_OC(oc) and validate_CPU(cpu) and validated_Memory(memory):
         return True
     return False
 
 
 
- 
-
 
 def create_new_machine(vm_name,oc,cpu,memory):
 
-    if not validated_user_machine(vm_name,oc,cpu,memory):
+    if not validated_user_machine_input(vm_name,oc,cpu,memory):
         return None
 
-    new_machine = Virtual_Machine(vm_name,oc,cpu,memory)
-    print("New machine created successfully")
-    return new_machine
+    schema = {
+        "type": "object",
+        "properties": {
+            "vm_name": {"type": "string"},
+            "oc": {"type": "string"},
+            "cpu": {"type": "integer"},
+            "memory": {"type": "integer"},
+        },
+        "required": ["vm_name", "oc" ,"cpu" , "memory"]
+        }
+    
+
+
+    try:
+
+        validate(instance={ "vm_name" : vm_name , "oc" : oc, "cpu" : cpu , "memory" : memory }, schema=schema)
+
+        new_machine = Virtual_Machine(vm_name,oc,cpu,memory)
+        print("New machine created successfully")
+        return new_machine
+    
+    except jsonschema.exceptions.ValidationError as e:
+        print(f"Data validation failed: {e.message}") 
 
 
 
@@ -162,24 +148,7 @@ def obj_dict(obj):
 # This function changes the object into a dictionary, which json.dumps() can process.
 def config_JSON_File(machines_list):
 
-    schema = {
-        "type": "array",
-        "items": {
-            "type": "object",
-            "properties": {
-                "machine_name": {"type": "string"},
-                "oc": {"type": "string"},
-                "cpu": {"type": "integer"},
-                "memory": {"type": "integer"},
-                },
-            "required": ["machine_name", "oc","cpu","memory"]
-            }
-        }
-
-
     try:
-        validate(instance=machines_list, schema=schema)
-        print("Data is valid.")
         json_string = json.dumps(machines_list, default=obj_dict)
         # print("Json List:", json_string)
 
@@ -193,8 +162,9 @@ def config_JSON_File(machines_list):
             file.write(json_string)
         
         print("The new machine has been added to the database.")
-    except jsonschema.exceptions.ValidationError as e:
-        print(f"Data validation failed: {e.message}")
+
+    except Exception as ex:
+        print(f"Error: {ex}")
         return False
 
 
