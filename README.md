@@ -58,27 +58,9 @@ This will return you to your system’s default Python environment.
 Git Workflow
 To keep your repository up to date with the remote, follow these steps:
 Pull Latest Changes
-Before starting work, make sure your local copy is up to date with the latest changes from the main branch:
+Before starting work, make sure your local copy is up to date with the latest changes from the 
+main branch: git pull origin main
+Commit Changes : git add .
+Commit Changes : git commit -m "Your commit message here"
+Push Changes to the repository : git push origin main 
 
-bash
-Copy code
-git pull origin main
-Commit Changes
-Make sure to commit your changes regularly:
-
-bash
-Copy code
-git add .
-git commit -m "Your commit message here"
-Push Changes
-When you're ready to push your changes to the repository:
-
-bash
-Copy code
-git push origin main
-Troubleshooting
-If you face issues while activating the virtual environment, ensure you have the correct permissions.
-Make sure pip is installed and up to date by running: pip install --upgrade pip.
-If you run into dependency conflicts, try using pipenv or poetry for managing dependencies.
-License
-Include any licensing information here, if applicable.
