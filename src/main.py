@@ -135,9 +135,14 @@ def validated_user_machine(vm_name,oc,cpu,memory):
 
 
 
+ 
+
+
 def create_new_machine(vm_name,oc,cpu,memory):
+
     if not validated_user_machine(vm_name,oc,cpu,memory):
         return None
+
     new_machine = Virtual_Machine(vm_name,oc,cpu,memory)
     print("New machine created successfully")
     return new_machine
@@ -157,7 +162,24 @@ def obj_dict(obj):
 # This function changes the object into a dictionary, which json.dumps() can process.
 def config_JSON_File(machines_list):
 
+    schema = {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "machine_name": {"type": "string"},
+                "oc": {"type": "string"},
+                "cpu": {"type": "integer"},
+                "memory": {"type": "integer"},
+                },
+            "required": ["machine_name", "oc","cpu","memory"]
+            }
+        }
+
+
     try:
+        validate(instance=machines_list, schema=schema)
+        print("Data is valid.")
         json_string = json.dumps(machines_list, default=obj_dict)
         # print("Json List:", json_string)
 
@@ -171,9 +193,8 @@ def config_JSON_File(machines_list):
             file.write(json_string)
         
         print("The new machine has been added to the database.")
-
-    except Exception as ex:
-        print(f"Error: {ex}")
+    except jsonschema.exceptions.ValidationError as e:
+        print(f"Data validation failed: {e.message}")
         return False
 
 
