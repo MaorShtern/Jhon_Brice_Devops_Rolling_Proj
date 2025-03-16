@@ -1,1 +1,14 @@
-[{"machine_name": "maor", "oc": "Windows", "cpu": 5, "memory": 5}]
+[
+    {
+        "machine_name": "maor",
+        "oc": "Windows",
+        "cpu": 16,
+        "memory": 64
+    },
+    {
+        "machine_name": "nnvnvnv_1",
+        "oc": "Windows",
+        "cpu": 2,
+        "memory": 3
+    }
+]

@@ -1,11 +1,14 @@
 
 import logging
 import re
-from Virtual_Machine import Virtual_Machine
+from Machine import Machine
 import json
 import os
 import jsonschema
 from jsonschema import validate
+
+
+machines_list = []
 
 
 
@@ -20,6 +23,7 @@ logging.basicConfig(
 
 
 def Prompt_Users_For_Input():
+    print()
     print(" ---------------------------------------------------------------------------------- ")
     print("Please enter the machine details as specified.")
     print("Enter virtual machine name: (enter 'exit' to finish)")
@@ -27,6 +31,7 @@ def Prompt_Users_For_Input():
     print("What number of CPU cores allocated to the machine? ( 1 - 16 )")
     print("How much memory int GB would you like to allocate? ( 1 - 64 )")
     print(" ---------------------------------------------------------------------------------- ")
+    print()
 
 
 
@@ -63,7 +68,6 @@ def validate_name(vm_name):
 
 # Check whether the system the user entered into the system is correct.
 def validate_OC(oc):
-
     supported_os = ["ubuntu", "windows", "centos"]
     if oc.lower() not in supported_os:
         print()
@@ -126,11 +130,12 @@ def create_new_machine(vm_name,oc,cpu,memory):
 
         validate(instance={ "vm_name" : vm_name , "oc" : oc, "cpu" : cpu , "memory" : memory }, schema=schema)
 
-        new_machine = Virtual_Machine(vm_name,oc,cpu,memory)
+        new_machine = Machine(vm_name,oc,cpu,memory)
         print("New machine created successfully")
         return new_machine
     
     except jsonschema.exceptions.ValidationError as e:
+        print("The new machine was not added to the database.\nPlease check what is wrong with the function --> config_JSON_File")
         print(f"Data validation failed: {e.message}") 
 
 
@@ -146,12 +151,13 @@ def obj_dict(obj):
 # By default, json.dumps() can only handle basic types like strings, numbers, lists, and dictionaries. 
 # To convert custom objects, you use the default argument and pass the obj_dict function. 
 # This function changes the object into a dictionary, which json.dumps() can process.
-def config_JSON_File(machines_list):
+def config_JSON_File():
 
     try:
-        json_string = json.dumps(machines_list, default=obj_dict)
-        # print("Json List:", json_string)
 
+        # The indent=4 argument ensures that the output is formatted nicely with an indentation level of 4 spaces.
+        json_string = json.dumps(machines_list, default=obj_dict, indent=4)
+        
         # Specify the path to the file outside the current directory
         file_path = os.path.join("..","scripts","instances.json")
 
@@ -171,8 +177,6 @@ def config_JSON_File(machines_list):
 
 if __name__ == "__main__":
 
-
-    machines_list = []
 
     vm_name = ""
 
@@ -195,14 +199,12 @@ if __name__ == "__main__":
 
         new_machine = create_new_machine(vm_name,oc,cpu,memory)
 
-        if new_machine != None:
+
+        if new_machine is not None:
             machines_list.append(new_machine)
             print("The new machine has been added to the list of existing systems.")
-        if config_JSON_File(machines_list) is False:
-            print("The new machine was not added to the database.\nPlease check what is wrong with the function --> config_JSON_File")
+            config_JSON_File() 
 
-
-        # print(chr(27) + "[2J")
 
 
 
