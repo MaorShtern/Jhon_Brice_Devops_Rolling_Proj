@@ -1,7 +1,7 @@
 [
     {
-        "machine_name": "aaaa",
-        "oc": "Ubuntu",
+        "machine_name": "maor_1",
+        "oc": "Windows",
         "cpu": 5,
         "memory": 5
     }

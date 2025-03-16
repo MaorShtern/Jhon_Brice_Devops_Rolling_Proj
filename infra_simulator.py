@@ -2,11 +2,12 @@
 import logging
 import re
 from src.Machine import Machine
-# from Machine import Machine
 import json
 import os
 import jsonschema
 from jsonschema import validate
+import subprocess
+import sys
 
 
 machines_list = []
@@ -114,6 +115,8 @@ def create_new_machine(vm_name,oc,cpu,memory):
     if not validated_user_machine_input(vm_name,oc,cpu,memory):
         return None
 
+
+    # A schema that ensures that the object meets the criteria we require of it
     schema = {
         "type": "object",
         "properties": {
@@ -132,12 +135,20 @@ def create_new_machine(vm_name,oc,cpu,memory):
         validate(instance={ "vm_name" : vm_name , "oc" : oc, "cpu" : cpu , "memory" : memory }, schema=schema)
 
         new_machine = Machine(vm_name,oc,cpu,memory)
-        print("New machine created successfully")
+        logging.info("New machine created successfully")
         return new_machine
     
-    except jsonschema.exceptions.ValidationError as e:
-        print("The new machine was not added to the database.\nPlease check what is wrong with the function --> config_JSON_File")
-        print(f"Data validation failed: {e.message}") 
+    # raised when data doesn't conform to a specified JSON schema
+    except jsonschema.exceptions.ValidationError as ex:
+        logging.error("The new machine was not added to the database. Please check what is wrong with the function --> config_JSON_File")
+        logging.error(f"Data validation failed: {ex.message}") 
+    
+
+    # Catch unexpected errors
+    except Exception as ex:
+        logging.error(f"An unexpected error occurred: {str(ex)}")
+        return None
+
 
 
 
@@ -168,11 +179,34 @@ def config_JSON_File():
         with open(file_path , 'w') as file:
             file.write(json_string)
         
-        print("The new machine has been added to the database.")
+        logging.info("The new machine has been added to the database.")
 
     except Exception as ex:
-        print(f"Error: {ex}")
+        logging.error(f"Error: {ex}")
         return False
+
+
+
+def Run_Bash_Script():
+
+    try:
+        # Run the bash script
+        result = subprocess.run(['bash', 'scripts/Ins_and_Con_Nginx.sh'], check=True, text=True, capture_output=True)
+        # Print the output of the script
+        logging.info(f"Output: {result.stdout}")
+        logging.info("Script executed successfully.")
+
+    except subprocess.CalledProcessError as ex:
+        # If the script fails, print the error message
+        logging.error(f"Error occurred while executing the script: {ex}")
+        logging.error(f"Error Output: {ex.stderr}")
+        sys.exit(1)
+    
+
+    # Catch unexpected errors
+    except Exception as ex:
+        logging.error(f"An unexpected error occurred: {str(ex)}")
+        sys.exit(1)
 
 
 
@@ -201,10 +235,14 @@ if __name__ == "__main__":
         new_machine = create_new_machine(vm_name,oc,cpu,memory)
 
 
-        if new_machine is not None:
-            machines_list.append(new_machine)
-            print("The new machine has been added to the list of existing systems.")
-            config_JSON_File() 
+        if new_machine is None:
+            continue
+
+        machines_list.append(new_machine)
+        logging.info("The new machine has been added to the list of existing systems.")
+        config_JSON_File() 
+
+        Run_Bash_Script()
 
 
 
