@@ -1,7 +1,8 @@
 
 import logging
 import re
-from Machine import Machine
+from src.Machine import Machine
+# from Machine import Machine
 import json
 import os
 import jsonschema
@@ -159,7 +160,7 @@ def config_JSON_File():
         json_string = json.dumps(machines_list, default=obj_dict, indent=4)
         
         # Specify the path to the file outside the current directory
-        file_path = os.path.join("..","scripts","instances.json")
+        file_path = os.path.join("configs","instances.json")
 
         # Make sure the directory exists, create it if it doesn't
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
