@@ -1,8 +1,22 @@
 [
     {
-        "machine_name": "maor_1",
-        "oc": "Windows",
-        "cpu": 5,
-        "memory": 5
+        "machine_name": "maor",
+        "oc": "CentOS",
+        "cpu": 4,
+        "memory": 4,
+        "services": {
+            "Nginx": "install",
+            "python3": "install"
+        }
+    },
+    {
+        "machine_name": "maor2",
+        "oc": "Ubuntu",
+        "cpu": 8,
+        "memory": 8,
+        "services": {
+            "Apache": "install",
+            "python3": "install"
+        }
     }
 ]

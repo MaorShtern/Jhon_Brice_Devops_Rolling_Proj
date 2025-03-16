@@ -232,11 +232,14 @@ if __name__ == "__main__":
             memory = -1
 
 
+
+        if create_new_machine(vm_name,oc,cpu,memory) is None:
+            continue
+
+
         new_machine = create_new_machine(vm_name,oc,cpu,memory)
 
-
-        if new_machine is None:
-            continue
+        
 
         machines_list.append(new_machine)
         logging.info("The new machine has been added to the list of existing systems.")

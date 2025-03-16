@@ -3,60 +3,56 @@
 # Exit on error
 set -e
 
-# Check if Nginx is installed
-if ! dpkg -l | grep -q nginx; then
-    echo "Nginx is not installed. Installing Nginx..."
-    
-    # Update the package list
-    echo "Update the package list"
-    #sudo apt-get update -y
-    
-    # Install Nginx
-    echo "Install Nginx"
-    #sudo apt-get install -y nginx
-else
-    echo "Nginx is already installed. Skipping installation."
+
+# Path to the JSON file
+JSON_FILE="../configs/instances.json"
+
+
+# Check if the file exists
+if [ ! -f "$JSON_FILE" ]; then
+    echo "Error: File $JSON_FILE not found!"
+    exit 1
 fi
 
-# Start Nginx service
-echo "Starting Nginx service..."
-#sudo systemctl start nginx
 
-# Enable Nginx to start on boot
-echo "Enabling Nginx to start on boot..."
-# sudo systemctl enable nginx
+jq -c '.[]' "$JSON_FILE" | while read -r machine; do
 
 
-echo "Nginx is running successfully."
+    # Extract values from each object
+    machine_name=$(echo "$machine" | jq -r '.machine_name')
+    oc=$(echo "$machine" | jq -r '.oc')
+    cpu=$(echo "$machine" | jq -r '.cpu')
+    memory=$(echo "$machine" | jq -r '.memory')
+    services=$(echo "$machine" | jq -r '.services')
+
+    # Print the extracted values
+    echo "Machine Name: $machine_name"
+    echo "Operating System: $oc"
+    echo "CPU: $cpu"
+    echo "Memory: $memory"
+    echo "services: $services"
+    echo "--------------------------------"
 
 
-# # Check if Nginx is running
-# echo "Checking if Nginx is running..."
-# if systemctl is-active --quiet nginx; then
-#     echo "Nginx is running successfully."
-# else
-#     echo "Failed to start Nginx. Please check the service status."
-#     exit 1
-# fi
+  has_nginx=$(echo "$machine" | jq '(.services | has("Nginx"))')
 
-# Configure a basic web page (Optional)
-echo "Configuring a basic index.html page..."
-echo "<html>
-  <head><title>Welcome to Nginx</title></head>
-  <body><h1>Success! Nginx is installed and running.</h1></body>
-</html>" 
-
-# | sudo tee /var/www/html/index.html > /dev/null
-
-# Reload Nginx to apply changes
-echo "Reloading Nginx to apply changes..."
-# sudo systemctl reload nginx
-
-echo "Nginx installation and configuration completed!"
-
-
-
-
+    # If "Nginx" is found, print the machine name
+    if [ "$has_nginx" == "true" ]; then
+        machine_name=$(echo "$machine" | jq -r '.machine_name')
+        echo "Nginx is present in the services of machine: $machine_name"
+    else
+        machine_name=$(echo "$machine" | jq -r '.machine_name')
+        echo "Nginx is NOT present in the services of machine: $machine_name"
+        echo "Nginx is not installed. Installing Nginx..."
+        # Update the package list
+        echo "Update the package list"
+        #sudo apt-get update -y
+        # Install Nginx
+        echo "Install Nginx"
+        echo "Nginx installation and configuration completed!"
+    fi
+    echo
+done
 
 
 
