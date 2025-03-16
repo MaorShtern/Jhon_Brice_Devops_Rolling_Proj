@@ -1,40 +1,67 @@
 #!/bin/bash
 
 # Exit on error
-# set -e
+set -e
 
-# Update the package list
-echo "Updating package list..."
-# sudo apt-get update -y
 
-# Install Nginx
-echo "Installing Nginx..."
-# sudo apt-get install -y nginx
+# Path to the JSON file
+JSON_FILE="../configs/instances.json"
 
-# Start Nginx service
-echo "Starting Nginx service..."
-# sudo systemctl start nginx
 
-# Enable Nginx to start on boot
-echo "Enabling Nginx to start on boot..."
-# sudo systemctl enable nginx
+# Check if the file exists
+if [ ! -f "$JSON_FILE" ]; then
+    echo "Error: File $JSON_FILE not found!"
+    exit 1
+fi
 
-# Check if Nginx is running
-echo "Checking if Nginx is running..."
-# sudo systemctl status nginx
 
-# Configure a basic web page (Optional)
-echo "Configuring a basic index.html page..."
-echo "<html>
-  <head><title>Welcome to Nginx</title></head>
-  <body><h1>Success! Nginx is installed and running.</h1></body>
-</html>" 
+jq -c '.[]' "$JSON_FILE" | while read -r machine; do
 
-# | sudo tee /var/www/html/index.html > /dev/null
 
-# Reload Nginx to apply changes
-echo "Reloading Nginx to apply changes..."
-#sudo systemctl reload nginx
+    # Extract values from each object
+    machine_name=$(echo "$machine" | jq -r '.machine_name')
+    oc=$(echo "$machine" | jq -r '.oc')
+    cpu=$(echo "$machine" | jq -r '.cpu')
+    memory=$(echo "$machine" | jq -r '.memory')
+    services=$(echo "$machine" | jq -r '.services')
 
-# Print completion message
-echo "Nginx installation and configuration completed!"
+    # Print the extracted values
+    echo "Machine Name: $machine_name"
+    echo "Operating System: $oc"
+    echo "CPU: $cpu"
+    echo "Memory: $memory"
+    echo "services: $services"
+    echo "--------------------------------"
+
+
+  has_nginx=$(echo "$machine" | jq '(.services | has("Nginx"))')
+
+    # If "Nginx" is found, print the machine name
+    if [ "$has_nginx" == "true" ]; then
+        machine_name=$(echo "$machine" | jq -r '.machine_name')
+        echo "Nginx is present in the services of machine: $machine_name"
+    else
+        machine_name=$(echo "$machine" | jq -r '.machine_name')
+        echo "Nginx is NOT present in the services of machine: $machine_name"
+        echo "Nginx is not installed. Installing Nginx..."
+        # Update the package list
+        echo "Update the package list"
+        #sudo apt-get update -y
+        # Install Nginx
+        echo "Install Nginx"
+        echo "Nginx installation and configuration completed!"
+    fi
+    echo
+done
+
+
+
+
+
+
+
+
+
+
+
+
