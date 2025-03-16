@@ -206,6 +206,8 @@ if __name__ == "__main__":
             print("The new machine has been added to the list of existing systems.")
             config_JSON_File() 
 
+        print("hwllo")
+
 
 
 
