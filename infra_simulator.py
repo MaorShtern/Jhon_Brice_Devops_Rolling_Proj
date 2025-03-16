@@ -193,6 +193,7 @@ def Run_Bash_Script():
         # Run the bash script
         result = subprocess.run(['bash', 'scripts/Ins_and_Con_Nginx.sh'], check=True, text=True, capture_output=True)
         # Print the output of the script
+        print()
         logging.info(f"Output: {result.stdout}")
         logging.info("Script executed successfully.")
 

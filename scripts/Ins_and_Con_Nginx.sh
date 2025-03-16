@@ -34,7 +34,8 @@ jq -c '.[]' "$JSON_FILE" | while read -r machine; do
     echo "--------------------------------"
 
 
-  has_nginx=$(echo "$machine" | jq '(.services | has("Nginx"))')
+    # Check if "Nginx" is present in the "services" object
+    has_nginx=$(echo "$machine" | jq '(.services | has("Nginx"))')
 
     # If "Nginx" is found, print the machine name
     if [ "$has_nginx" == "true" ]; then
@@ -49,7 +50,9 @@ jq -c '.[]' "$JSON_FILE" | while read -r machine; do
         #sudo apt-get update -y
         # Install Nginx
         echo "Install Nginx"
-        echo "Nginx installation and configuration completed!"
+        
+
+
     fi
     echo
 done
