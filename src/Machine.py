@@ -6,6 +6,7 @@ class Machine():
         self.oc = oc
         self.cpu = cpu
         self.memory = memory
+        self.services = {}
 
 
     def to_dict(self):
@@ -15,6 +16,7 @@ class Machine():
             "OC": self.oc,
             "CPU": self.cpu , 
             "Memory": self.memory , 
+            "Services": self.services
         }
     
 
