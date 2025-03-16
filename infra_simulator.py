@@ -247,6 +247,8 @@ if __name__ == "__main__":
 
         Run_Bash_Script()
 
+        print("hello")
+
 
 
 
