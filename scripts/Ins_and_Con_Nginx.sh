@@ -15,51 +15,31 @@ if [ ! -f "$JSON_FILE" ]; then
 fi
 
 
-jq -c '.[]' "$JSON_FILE" | while read -r machine; do
+machine=$1
 
 
-    # Extract values from each object
-    machine_name=$(echo "$machine" | jq -r '.machine_name')
-    oc=$(echo "$machine" | jq -r '.oc')
-    cpu=$(echo "$machine" | jq -r '.cpu')
-    memory=$(echo "$machine" | jq -r '.memory')
-    services=$(echo "$machine" | jq -r '.services')
-
-    # Print the extracted values
-    echo "Machine Name: $machine_name"
-    echo "Operating System: $oc"
-    echo "CPU: $cpu"
-    echo "Memory: $memory"
-    echo "services: $services"
-    echo "--------------------------------"
+# Extract values from each object
+machine_name=$(echo "$machine" | jq -r '.Machine_name')
+oc=$(echo "$machine" | jq -r '.OC')
+cpu=$(echo "$machine" | jq -r '.CPU')
+memory=$(echo "$machine" | jq -r '.Memory')
 
 
-    # Check if "Nginx" is present in the "services" object
-    has_nginx=$(echo "$machine" | jq '(.services | has("Nginx"))')
-
-    # If "Nginx" is found, print the machine name
-    if [ "$has_nginx" == "true" ]; then
-        machine_name=$(echo "$machine" | jq -r '.machine_name')
-        echo "Nginx is present in the services of machine: $machine_name"
-    else
-        machine_name=$(echo "$machine" | jq -r '.machine_name')
-        echo "Nginx is NOT present in the services of machine: $machine_name"
-        echo "Nginx is not installed. Installing Nginx..."
-        # Update the package list
-        echo "Update the package list"
-        #sudo apt-get update -y
-        # Install Nginx
-        echo "Install Nginx"
-        
-
-
-    fi
-    echo
-done
+# echo "Received JSON: $machine"
+# Print the extracted values
+echo "Machine Name: $machine_name"
+echo "Operating System: $oc"
+echo "CPU: $cpu"
+echo "Memory: $memory"
+echo "--------------------------------"
+# echo "$machine" | jq -r 'values[]'
 
 
 
-
+echo "The new machine has beec created by this parameters!"
+echo "Installs Nginx on the machine"
+echo "Installing..."
+echo "Nginx has been successfully installed!" 
 
 
 

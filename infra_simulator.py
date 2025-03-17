@@ -39,17 +39,17 @@ def Prompt_Users_For_Input():
 
 
 # Check whether the name the user entered into the system is correct.
-def validate_name(vm_name):
+def validate_name(machine_name):
 
     # Is the machine name between 3 and 50 characters?
-    if len(vm_name) < 3 or len(vm_name) > 50:
+    if len(machine_name) < 3 or len(machine_name) > 50:
         print()
         logging.error("the machine name must be between 3 and 50 characters.")
         print()
         return False
     
     # Does the machine name contain spaces?
-    elif vm_name.count(" ") > 0:
+    elif machine_name.count(" ") > 0:
         print()
         logging.error("no spaces are allowed.")
         print()
@@ -57,7 +57,7 @@ def validate_name(vm_name):
 
     # Check that the name recognizes numbers, letters, and specific characters.
     # checking if a variable name matches a specific pattern using a regular expression (regex).
-    elif not re.match("^[a-zA-Z0-9_-]+$", vm_name):
+    elif not re.match("^[a-zA-Z0-9_-]+$", machine_name):
         print()
         logging.error("VM name can only contain letters, numbers, hyphens, and underscores.")
         print()
@@ -102,17 +102,17 @@ def validated_Memory(memory):
 
 
 # A function that checks the validity of the values ​​that the user entered into the system.
-def validated_user_machine_input(vm_name,oc,cpu,memory):
-    if validate_name(vm_name) and validate_OC(oc) and validate_CPU(cpu) and validated_Memory(memory):
+def validated_user_machine_input(machine_name,oc,cpu,memory):
+    if validate_name(machine_name) and validate_OC(oc) and validate_CPU(cpu) and validated_Memory(memory):
         return True
     return False
 
 
 
 
-def create_new_machine(vm_name,oc,cpu,memory):
+def create_new_machine(machine_name,oc,cpu,memory):
 
-    if not validated_user_machine_input(vm_name,oc,cpu,memory):
+    if not validated_user_machine_input(machine_name,oc,cpu,memory):
         return None
 
 
@@ -120,21 +120,21 @@ def create_new_machine(vm_name,oc,cpu,memory):
     schema = {
         "type": "object",
         "properties": {
-            "vm_name": {"type": "string"},
+            "machine_name": {"type": "string"},
             "oc": {"type": "string"},
             "cpu": {"type": "integer"},
             "memory": {"type": "integer"},
         },
-        "required": ["vm_name", "oc" ,"cpu" , "memory"]
+        "required": ["machine_name", "oc" ,"cpu" , "memory"]
         }
     
 
 
     try:
 
-        validate(instance={ "vm_name" : vm_name , "oc" : oc, "cpu" : cpu , "memory" : memory }, schema=schema)
+        validate(instance={ "machine_name" : machine_name , "oc" : oc, "cpu" : cpu , "memory" : memory }, schema=schema)
 
-        new_machine = Machine(vm_name,oc,cpu,memory)
+        new_machine = Machine(machine_name,oc,cpu,memory)
         logging.info("New machine created successfully")
         return new_machine
     
@@ -187,11 +187,15 @@ def config_JSON_File():
 
 
 
-def Run_Bash_Script():
+def Run_Bash_Script(new_machine):
 
     try:
+
+        # send new_machine json string data to bash script to install Nginx
+        json_data = json.dumps(new_machine.to_dict())
+
         # Run the bash script
-        result = subprocess.run(['bash', 'scripts/Ins_and_Con_Nginx.sh'], check=True, text=True, capture_output=True)
+        result = subprocess.run(['bash', 'scripts/Ins_and_Con_Nginx.sh', json_data], check=True, text=True, capture_output=True)
         # Print the output of the script
         print()
         logging.info(f"Output: {result.stdout}")
@@ -214,14 +218,14 @@ def Run_Bash_Script():
 if __name__ == "__main__":
 
 
-    vm_name = ""
+    machine_name = ""
 
-    while vm_name != "exit":
+    while machine_name != "exit":
 
         Prompt_Users_For_Input()
 
-        vm_name = input("machine name: ")
-        if vm_name.lower() == "exit":
+        machine_name = input("machine name: ")
+        if machine_name.lower() == "exit":
             break
         
         oc = input("OS: ")
@@ -234,11 +238,11 @@ if __name__ == "__main__":
 
 
 
-        if create_new_machine(vm_name,oc,cpu,memory) is None:
+        if create_new_machine(machine_name,oc,cpu,memory) is None:
             continue
 
 
-        new_machine = create_new_machine(vm_name,oc,cpu,memory)
+        new_machine = create_new_machine(machine_name,oc,cpu,memory)
 
         
 
@@ -246,7 +250,7 @@ if __name__ == "__main__":
         logging.info("The new machine has been added to the list of existing systems.")
         config_JSON_File() 
 
-        Run_Bash_Script()
+        Run_Bash_Script(new_machine)
 
 
 

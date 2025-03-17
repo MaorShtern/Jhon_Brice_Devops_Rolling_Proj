@@ -1,9 +1,8 @@
 [
     {
         "machine_name": "maor_1",
-        "oc": "Ubuntu",
-        "cpu": 10,
-        "memory": 10,
-        "services": {}
+        "oc": "Windows",
+        "cpu": 4,
+        "memory": 4
     }
 ]
