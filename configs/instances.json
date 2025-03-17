@@ -4,5 +4,11 @@
         "oc": "Windows",
         "cpu": 4,
         "memory": 4
+    },
+    {
+        "machine_name": "maor_2",
+        "oc": "Windows",
+        "cpu": 13,
+        "memory": 16
     }
 ]

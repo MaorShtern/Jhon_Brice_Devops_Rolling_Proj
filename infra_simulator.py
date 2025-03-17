@@ -12,15 +12,29 @@ import sys
 
 machines_list = []
 
+def Define_logging():
 
+    log_file = 'logs/provisioning.log'
+    # Create a custom logger
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
 
-logging.basicConfig(
-    level=logging.INFO,  # Log level
-    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
-    handlers=[
-        logging.StreamHandler()  # Output to stdout
-    ]
-)
+    # Create handlers for both file and stdout
+    file_handler = logging.FileHandler(log_file)
+    stdout_handler = logging.StreamHandler(sys.stdout)
+
+    # Define the log format
+    log_format = '%(asctime)s - %(levelname)s - %(message)s'
+    formatter = logging.Formatter(log_format)
+
+    # Add formatters to handlers
+    file_handler.setFormatter(formatter)
+    stdout_handler.setFormatter(formatter)
+
+    # Add handlers to the logger
+    logger.addHandler(file_handler)
+    logger.addHandler(stdout_handler)
+
 
 
 
@@ -217,7 +231,7 @@ def Run_Bash_Script(new_machine):
 
 if __name__ == "__main__":
 
-
+    Define_logging()
     machine_name = ""
 
     while machine_name != "exit":

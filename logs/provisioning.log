@@ -1,0 +1,75 @@
+2025-03-17 08:56:27,306 - INFO - New machine created successfully
+2025-03-17 08:56:27,308 - INFO - New machine created successfully
+2025-03-17 08:56:27,309 - INFO - The new machine has been added to the list of existing systems.
+2025-03-17 08:56:27,313 - INFO - The new machine has been added to the database.
+2025-03-17 08:56:29,338 - INFO - Output: Machine Name: maor_1
+Operating System: Ubuntu
+CPU: 10
+Memory: 10
+--------------------------------
+The new machine has beec created by this parameters!
+Installs Nginx on the machine
+Installing...
+Nginx has been successfully installed!
+
+2025-03-17 08:56:29,339 - INFO - Script executed successfully.
+2025-03-17 08:56:56,781 - INFO - New machine created successfully
+2025-03-17 08:56:56,783 - INFO - New machine created successfully
+2025-03-17 08:56:56,783 - INFO - The new machine has been added to the list of existing systems.
+2025-03-17 08:56:56,788 - INFO - The new machine has been added to the database.
+2025-03-17 08:56:58,810 - INFO - Output: Machine Name: maor_2
+Operating System: Ubuntu
+CPU: 12
+Memory: 12
+--------------------------------
+The new machine has beec created by this parameters!
+Installs Nginx on the machine
+Installing...
+Nginx has been successfully installed!
+
+2025-03-17 08:56:58,811 - INFO - Script executed successfully.
+2025-03-17 08:57:17,409 - INFO - New machine created successfully
+2025-03-17 08:57:17,412 - INFO - New machine created successfully
+2025-03-17 08:57:17,412 - INFO - The new machine has been added to the list of existing systems.
+2025-03-17 08:57:17,417 - INFO - The new machine has been added to the database.
+2025-03-17 08:57:19,446 - INFO - Output: Machine Name: Ubuntu
+Operating System: Ubuntu
+CPU: 13
+Memory: 13
+--------------------------------
+The new machine has beec created by this parameters!
+Installs Nginx on the machine
+Installing...
+Nginx has been successfully installed!
+
+2025-03-17 08:57:19,446 - INFO - Script executed successfully.
+2025-03-17 09:00:42,883 - INFO - New machine created successfully
+2025-03-17 09:00:42,885 - INFO - New machine created successfully
+2025-03-17 09:00:42,885 - INFO - The new machine has been added to the list of existing systems.
+2025-03-17 09:00:42,891 - INFO - The new machine has been added to the database.
+2025-03-17 09:00:46,536 - INFO - Output: Machine Name: maor_1
+Operating System: Windows
+CPU: 4
+Memory: 4
+--------------------------------
+The new machine has beec created by this parameters!
+Installs Nginx on the machine
+Installing...
+Nginx has been successfully installed!
+
+2025-03-17 09:00:46,536 - INFO - Script executed successfully.
+2025-03-17 09:00:56,671 - INFO - New machine created successfully
+2025-03-17 09:00:56,673 - INFO - New machine created successfully
+2025-03-17 09:00:56,674 - INFO - The new machine has been added to the list of existing systems.
+2025-03-17 09:00:56,679 - INFO - The new machine has been added to the database.
+2025-03-17 09:00:58,705 - INFO - Output: Machine Name: maor_2
+Operating System: Windows
+CPU: 13
+Memory: 16
+--------------------------------
+The new machine has beec created by this parameters!
+Installs Nginx on the machine
+Installing...
+Nginx has been successfully installed!
+
+2025-03-17 09:00:58,705 - INFO - Script executed successfully.
