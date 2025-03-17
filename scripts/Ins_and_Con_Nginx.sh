@@ -55,6 +55,8 @@ handle_error() {
     echo "Installing..."
     echo "Nginx has been successfully installed!" 
 
+    sleep 2  # Simulate provisioning task
+
 
 } || handle_error "Error occurred during provisioning."
 

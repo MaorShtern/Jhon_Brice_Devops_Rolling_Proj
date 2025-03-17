@@ -1,14 +1,26 @@
 [
     {
-        "machine_name": "maor_1",
-        "oc": "Windows",
-        "cpu": 4,
-        "memory": 4
+        "Machine_name": "maor",
+        "OC": "Ubuntu",
+        "CPU": 4,
+        "Memory": 4
     },
     {
-        "machine_name": "maor_2",
-        "oc": "Windows",
-        "cpu": 13,
-        "memory": 16
+        "Machine_name": "moar_2",
+        "OC": "Ubuntu",
+        "CPU": 12,
+        "Memory": 12
+    },
+    {
+        "Machine_name": "maor_1",
+        "OC": "Ubuntu",
+        "CPU": 1,
+        "Memory": 1
+    },
+    {
+        "Machine_name": "maor_2",
+        "OC": "Windows",
+        "CPU": 2,
+        "Memory": 2
     }
 ]

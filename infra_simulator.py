@@ -8,6 +8,7 @@ import jsonschema
 from jsonschema import validate
 import subprocess
 import sys
+from json.decoder import JSONDecodeError
 
 
 machines_list = []
@@ -127,7 +128,7 @@ def validated_user_machine_input(machine_name,oc,cpu,memory):
 def create_new_machine(machine_name,oc,cpu,memory):
 
     if not validated_user_machine_input(machine_name,oc,cpu,memory):
-        return None
+        return False
 
 
     # A schema that ensures that the object meets the criteria we require of it
@@ -149,8 +150,9 @@ def create_new_machine(machine_name,oc,cpu,memory):
         validate(instance={ "machine_name" : machine_name , "oc" : oc, "cpu" : cpu , "memory" : memory }, schema=schema)
 
         new_machine = Machine(machine_name,oc,cpu,memory)
+        machines_list.append(new_machine)
         logging.info("New machine created successfully")
-        return new_machine
+        return True
     
     # raised when data doesn't conform to a specified JSON schema
     except jsonschema.exceptions.ValidationError as ex:
@@ -161,7 +163,7 @@ def create_new_machine(machine_name,oc,cpu,memory):
     # Catch unexpected errors
     except Exception as ex:
         logging.error(f"An unexpected error occurred: {str(ex)}")
-        return None
+        return False
 
 
 
@@ -177,23 +179,42 @@ def obj_dict(obj):
 # By default, json.dumps() can only handle basic types like strings, numbers, lists, and dictionaries. 
 # To convert custom objects, you use the default argument and pass the obj_dict function. 
 # This function changes the object into a dictionary, which json.dumps() can process.
-def config_JSON_File():
+def Write_To_JSON_File():
 
     try:
 
-        # The indent=4 argument ensures that the output is formatted nicely with an indentation level of 4 spaces.
-        json_string = json.dumps(machines_list, default=obj_dict, indent=4)
-        
         # Specify the path to the file outside the current directory
         file_path = os.path.join("configs","instances.json")
 
         # Make sure the directory exists, create it if it doesn't
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
+        try:
+            with open(file_path, 'r') as file:
+                file_data = json.load(file)
+
+        except FileNotFoundError:
+            # If file does not exist, initialize an empty list
+            file_data = []
+
+            # JSONDecodeError is an error that occurs when the JSON data is invalid, 
+            # such as having missing or extra commas, missing brackets, or other syntax errors.
+        except JSONDecodeError:
+            file_data = []
+
+    
+        file_data.append(machines_list[-1].to_dict())
+
+        # print(file_data)
+
+        # The indent=4 argument ensures that the output is formatted nicely with an indentation level of 4 spaces.
+        json_string = json.dumps(file_data, default=obj_dict, indent=4)
+
         with open(file_path , 'w') as file:
             file.write(json_string)
         
         logging.info("The new machine has been added to the database.")
+
 
     except Exception as ex:
         logging.error(f"Error: {ex}")
@@ -201,12 +222,12 @@ def config_JSON_File():
 
 
 
-def Run_Bash_Script(new_machine):
+def Run_Bash_Script():
 
     try:
 
         # send new_machine json string data to bash script to install Nginx
-        json_data = json.dumps(new_machine.to_dict())
+        json_data = json.dumps(machines_list[-1].to_dict())
 
         # Run the bash script
         result = subprocess.run(['bash', 'scripts/Ins_and_Con_Nginx.sh', json_data], check=True, text=True, capture_output=True)
@@ -226,6 +247,7 @@ def Run_Bash_Script(new_machine):
     except Exception as ex:
         logging.error(f"An unexpected error occurred: {str(ex)}")
         sys.exit(1)
+
 
 
 
@@ -252,19 +274,14 @@ if __name__ == "__main__":
 
 
 
-        if create_new_machine(machine_name,oc,cpu,memory) is None:
+        if create_new_machine(machine_name,oc,cpu,memory) is False:
             continue
 
-
-        new_machine = create_new_machine(machine_name,oc,cpu,memory)
-
         
-
-        machines_list.append(new_machine)
         logging.info("The new machine has been added to the list of existing systems.")
-        config_JSON_File() 
+        Write_To_JSON_File() 
 
-        Run_Bash_Script(new_machine)
+        Run_Bash_Script()
 
 
 
