@@ -1,14 +1,14 @@
 [
     {
-        "machine_name": "maor_3",
-        "oc": "CentOS",
-        "cpu": 12,
-        "memory": 12
-    },
-    {
-        "machine_name": "maor_34",
+        "machine_name": "maor_2",
         "oc": "Windows",
         "cpu": 4,
         "memory": 4
+    },
+    {
+        "machine_name": "maor",
+        "oc": "Windows",
+        "cpu": 5,
+        "memory": 12
     }
 ]

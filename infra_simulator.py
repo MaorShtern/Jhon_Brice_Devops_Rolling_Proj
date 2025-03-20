@@ -13,6 +13,7 @@ from json.decoder import JSONDecodeError
 
 machines_list = []
 
+
 def Define_logging():
 
     log_file = 'logs/provisioning.log'
@@ -26,7 +27,8 @@ def Define_logging():
 
     # Define the log format
     log_format = '%(asctime)s - %(levelname)s - %(message)s'
-    formatter = logging.Formatter(log_format)
+    date_format = '%d-%m-%Y %H:%M:%S'
+    formatter = logging.Formatter(log_format, datefmt=date_format)
 
     # Add formatters to handlers
     file_handler.setFormatter(formatter)
@@ -213,7 +215,6 @@ def Run_Bash_Script():
         # Run the bash script
         result = subprocess.run(['bash', 'scripts/config_json.sh'], check=True, text=True, capture_output=True)
         # Print the output of the script
-        print()
         logging.info(f"Output: {result.stdout}")
         logging.info("Script executed successfully.")
 

@@ -62,7 +62,6 @@ handle_error() {
         echo "Installs Nginx on the machine"
         echo "Installing..."
         echo "Nginx has been successfully installed!"
-        echo "" 
     done
 
 }
