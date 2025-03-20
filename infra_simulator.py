@@ -46,7 +46,7 @@ def Prompt_Users_For_Input():
     print("Enter virtual machine name: (enter 'exit' to finish)")
     print("What system would you like the machine to run on? ( Ubuntu / Windows / CentOS )")
     print("What number of CPU cores allocated to the machine? ( 1 - 16 )")
-    print("How much memory int GB would you like to allocate? ( 1 - 64 )")
+    print("How much memory int MB would you like to allocate? ( 1 and higher )")
     print(" ---------------------------------------------------------------------------------- ")
     print()
 
@@ -108,10 +108,10 @@ def validate_CPU(cpu):
 
 
 def validated_Memory(memory):
-    if 1 <= memory <= 64:
+    if memory >= 1 :
         return True
     print()
-    logging.error("Memory size  must be an integer between 1 and 64.")
+    logging.error("Memory size  must be a number 1 and higher.")
     print()
     return False
 
@@ -189,26 +189,10 @@ def Write_To_JSON_File():
         # Make sure the directory exists, create it if it doesn't
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-        try:
-            with open(file_path, 'r') as file:
-                file_data = json.load(file)
-
-        except FileNotFoundError:
-            # If file does not exist, initialize an empty list
-            file_data = []
-
-            # JSONDecodeError is an error that occurs when the JSON data is invalid, 
-            # such as having missing or extra commas, missing brackets, or other syntax errors.
-        except JSONDecodeError:
-            file_data = []
-
-    
-        file_data.append(machines_list[-1].to_dict())
-
-        # print(file_data)
 
         # The indent=4 argument ensures that the output is formatted nicely with an indentation level of 4 spaces.
-        json_string = json.dumps(file_data, default=obj_dict, indent=4)
+        json_string = json.dumps(machines_list, default=obj_dict, indent=4)
+
 
         with open(file_path , 'w') as file:
             file.write(json_string)
@@ -226,11 +210,8 @@ def Run_Bash_Script():
 
     try:
 
-        # send new_machine json string data to bash script to install Nginx
-        json_data = json.dumps(machines_list[-1].to_dict())
-
         # Run the bash script
-        result = subprocess.run(['bash', 'scripts/Ins_and_Con_Nginx.sh', json_data], check=True, text=True, capture_output=True)
+        result = subprocess.run(['bash', 'scripts/config_json.sh'], check=True, text=True, capture_output=True)
         # Print the output of the script
         print()
         logging.info(f"Output: {result.stdout}")
@@ -281,7 +262,9 @@ if __name__ == "__main__":
         logging.info("The new machine has been added to the list of existing systems.")
         Write_To_JSON_File() 
 
-        Run_Bash_Script()
+
+
+Run_Bash_Script()
 
 
 
