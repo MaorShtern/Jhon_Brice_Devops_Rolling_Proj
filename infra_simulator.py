@@ -21,9 +21,8 @@ def Define_logging():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
 
-    # Create handlers for both file and stdout
+    # Create handlers for the file 
     file_handler = logging.FileHandler(log_file)
-    stdout_handler = logging.StreamHandler(sys.stdout)
 
     # Define the log format
     log_format = '%(asctime)s - %(levelname)s - %(message)s'
@@ -32,12 +31,21 @@ def Define_logging():
 
     # Add formatters to handlers
     file_handler.setFormatter(formatter)
-    stdout_handler.setFormatter(formatter)
 
     # Add handlers to the logger
     logger.addHandler(file_handler)
-    logger.addHandler(stdout_handler)
 
+
+
+
+def Handle_Logging_Info(message):
+    print(message)
+    logging.info(message)
+
+
+def Handle_Logging_Error(message):
+    print(message)
+    logging.error(message)
 
 
 
@@ -61,14 +69,14 @@ def validate_name(machine_name):
     # Is the machine name between 3 and 50 characters?
     if len(machine_name) < 3 or len(machine_name) > 50:
         print()
-        logging.error("the machine name must be between 3 and 50 characters.")
+        print("the machine name must be between 3 and 50 characters.")
         print()
         return False
     
     # Does the machine name contain spaces?
     elif machine_name.count(" ") > 0:
         print()
-        logging.error("no spaces are allowed.")
+        print("no spaces are allowed.")
         print()
         return False
 
@@ -76,7 +84,7 @@ def validate_name(machine_name):
     # checking if a variable name matches a specific pattern using a regular expression (regex).
     elif not re.match("^[a-zA-Z0-9_-]+$", machine_name):
         print()
-        logging.error("VM name can only contain letters, numbers, hyphens, and underscores.")
+        print("VM name can only contain letters, numbers, hyphens, and underscores.")
         print()
         return False
     
@@ -90,7 +98,7 @@ def validate_OC(oc):
     supported_os = ["ubuntu", "windows", "centos"]
     if oc.lower() not in supported_os:
         print()
-        logging.error("Invalid OS choice. Supported OS are: Ubuntu / Windows / CentOS")
+        print("Invalid OS choice. Supported OS are: Ubuntu / Windows / CentOS")
         print()
         return False
     return True
@@ -103,7 +111,7 @@ def validate_CPU(cpu):
     if 1 <= cpu <= 16:
         return True
     print()
-    logging.error("CPU cores must be an integer between 1 and 16.")
+    print("CPU cores must be an integer between 1 and 16.")
     print()
     return False
 
@@ -113,7 +121,7 @@ def validated_Memory(memory):
     if memory >= 1 :
         return True
     print()
-    logging.error("Memory size  must be a number 1 and higher.")
+    print("Memory size  must be a number 1 and higher.")
     print()
     return False
 
@@ -153,18 +161,18 @@ def create_new_machine(machine_name,oc,cpu,memory):
 
         new_machine = Machine(machine_name,oc,cpu,memory)
         machines_list.append(new_machine)
-        logging.info("New machine created successfully")
+        Handle_Logging_Info("New machine created successfully")
         return True
     
     # raised when data doesn't conform to a specified JSON schema
     except jsonschema.exceptions.ValidationError as ex:
-        logging.error("The new machine was not added to the database. Please check what is wrong with the function --> config_JSON_File")
-        logging.error(f"Data validation failed: {ex.message}") 
+        Handle_Logging_Error("The new machine was not added to the database. Please check what is wrong with the function --> config_JSON_File")
+        Handle_Logging_Error(f"Data validation failed: {ex.message}") 
     
 
     # Catch unexpected errors
     except Exception as ex:
-        logging.error(f"An unexpected error occurred: {str(ex)}")
+        Handle_Logging_Error(f"An unexpected error occurred: {str(ex)}")
         return False
 
 
@@ -199,11 +207,11 @@ def Write_To_JSON_File():
         with open(file_path , 'w') as file:
             file.write(json_string)
         
-        logging.info("The new machine has been added to the database.")
+        Handle_Logging_Info("The new machine has been added to the database.")
 
 
     except Exception as ex:
-        logging.error(f"Error: {ex}")
+        Handle_Logging_Error(f"Error: {ex}")
         return False
 
 
@@ -215,19 +223,19 @@ def Run_Bash_Script():
         # Run the bash script
         result = subprocess.run(['bash', 'scripts/config_json.sh'], check=True, text=True, capture_output=True)
         # Print the output of the script
-        logging.info(f"Output: {result.stdout}")
-        logging.info("Script executed successfully.")
+        print(f"Output: {result.stdout}")
+        Handle_Logging_Info("Script executed successfully.")
 
     except subprocess.CalledProcessError as ex:
         # If the script fails, print the error message
-        logging.error(f"Error occurred while executing the script: {ex}")
-        logging.error(f"Error Output: {ex.stderr}")
+        Handle_Logging_Error(f"Error occurred while executing the script: {ex}")
+        Handle_Logging_Error(f"Error Output: {ex.stderr}")
         sys.exit(1)
     
 
     # Catch unexpected errors
     except Exception as ex:
-        logging.error(f"An unexpected error occurred: {str(ex)}")
+        Handle_Logging_Error(f"An unexpected error occurred: {str(ex)}")
         sys.exit(1)
 
 
@@ -260,7 +268,7 @@ if __name__ == "__main__":
             continue
 
         
-        logging.info("The new machine has been added to the list of existing systems.")
+        Handle_Logging_Info("The new machine has been added to the list of existing systems.")
         Write_To_JSON_File() 
 
 

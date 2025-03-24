@@ -12,14 +12,10 @@ log_message() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
 }
 
-# Function to log errors
-log_error() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - ERROR - $1" >> "$LOG_FILE"
-}
 
 # Function to handle errors and exit
-handle_error() {
-    log_error "$1"
+log_error() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - ERROR - $1" >> "$LOG_FILE"
     exit 1
 }
 
@@ -29,16 +25,12 @@ handle_error() {
 {
 
 
-    # Get the absolute path to the folder where this script is located
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-    # Build the absolute path to the JSON file
-    FILE_PATH="$SCRIPT_DIR/../configs/instances.json"
+    FILE_PATH="configs/instances.json"
 
 
     if [! -f "$FILE_PATH" ]; then
-        echo "File does NOT exist: $FILE_PATH"
-        exit 1
+        log_error "File does NOT exist: $FILE_PATH"
     fi
 
 
@@ -51,17 +43,65 @@ handle_error() {
         cpu=$(echo "$machine" | jq -r '.cpu')
         memory=$(echo "$machine" | jq -r '.memory')
 
+
         # print machine details
-        echo "Machine Name: $machine_name"
-        echo "Operating System: $oc"
-        echo "CPU: $cpu"
-        echo "Memory: $memory"
-        echo "The new machine has been created by this parameters!"
+        # echo "Machine Name: $machine_name"
+        # echo "Operating System: $oc"
+        # echo "CPU: $cpu"
+        # echo "Memory: $memory"
+
+        echo "The new machine: '$machine_name' has been created!"
+        log_message "New Machine -->  Name: $machine_name, OC: $oc, CPU: $cpu, Ram: $memory"
+
         echo "checking if VM has requearment.txt"
         echo "The VM does not have requirements.txt running --> 'pip install -r requirements.txt'" 
+        log_message "running --> 'pip install -r requirements.txt'"
+
         echo "Installs Nginx on the machine"
         echo "Installing..."
+
         echo "Nginx has been successfully installed!"
+        log_message "Nginx has been successfully installed!"
     done
 
 }
+
+
+
+
+
+
+# --------------------------------------------
+#   change what is print on terminal and what go to logs
+#   why echo go to log? --> echo only print to terminal and function write to logs
+
+# Echo to terminal
+#echo "This shows up in the terminal."
+# Send text to a log file
+#echo "This gets saved to the log file." >> /path/to/your_log_file.log
+
+# LOG_FILE="/path/to/your_log_file.log"
+
+# log_message() {
+#   local message="$1"
+  
+#   # Print to terminal
+#   echo "$message"
+  
+#   # Write to log file
+#   echo "$message" >> "$LOG_FILE"
+# }
+
+# # Example usage
+# log_message "Starting the script..."
+# log_message "Something happened."
+# log_message "Script finished."
+
+
+
+#
+#   do another check
+#   Submit the project
+# --------------------------------------------
+
+
