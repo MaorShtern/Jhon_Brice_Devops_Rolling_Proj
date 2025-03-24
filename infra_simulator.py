@@ -8,33 +8,41 @@ import jsonschema
 from jsonschema import validate
 import subprocess
 import sys
-from json.decoder import JSONDecodeError
+from src.logging_formatter import JSONFormatter  # Import the custom JSONFormatter
+
 
 
 machines_list = []
 
 
-def Define_logging():
+# why put logging setup inside a function?
+# Cleaner Code --> keeps logging setup organized and separate from the main code logic.
+# Reusable --> can call Define_logging() in multiple scripts or modules and avoiding repetitive code.
+# Better Control --> i decide when to set up logging and it easy to customize
+def Define_logging(log_file='logs/provisioning.log', level=logging.INFO):
 
-    log_file = 'logs/provisioning.log'
-    # Create a custom logger
+    # Ensure the directory and the file exists, if not it create them
+    os.makedirs(os.path.dirname(log_file), exist_ok=True)
+
+    # Create a custom logger on level INFO
     logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
+    logger.setLevel(level)
 
-    # Create handlers for the file 
-    file_handler = logging.FileHandler(log_file)
+    # Add handlers to the logger in if one does not already exist
+    # this prevents avoid adding multiple handlers on repeated calls in case the function is called again
+    if not logger.handlers:
 
-    # Define the log format
-    log_format = '%(asctime)s - %(levelname)s - %(message)s'
-    date_format = '%d-%m-%Y %H:%M:%S'
-    formatter = logging.Formatter(log_format, datefmt=date_format)
+        # Create handlers for the file 
+        file_handler = logging.FileHandler(log_file)
 
-    # Add formatters to handlers
-    file_handler.setFormatter(formatter)
+        # Use the imported JSONFormatter
+        json_formatter = JSONFormatter()
 
-    # Add handlers to the logger
-    logger.addHandler(file_handler)
+        # Add formatters to handlers
+        file_handler.setFormatter(json_formatter)
 
+        # Add handler to the logger
+        logger.addHandler(file_handler)
 
 
 
@@ -224,8 +232,7 @@ def Run_Bash_Script():
 
     except subprocess.CalledProcessError as ex:
         # If the script fails, print the error message
-        Handle_Logging_Error(f"Error occurred while executing the script: {ex}")
-        Handle_Logging_Error(f"Error Output: {ex.stderr}")
+        print(f"Error occurred while executing the script: {ex}")
         sys.exit(1)
     
 

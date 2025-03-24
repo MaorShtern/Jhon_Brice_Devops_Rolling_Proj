@@ -1,8 +1,8 @@
 [
     {
-        "machine_name": "mamama",
-        "oc": "CentOS",
-        "cpu": 1,
-        "memory": 1
+        "machine_name": "maor_1",
+        "oc": "Windows",
+        "cpu": 4,
+        "memory": 4
     }
 ]

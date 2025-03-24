@@ -72,11 +72,11 @@ Once a VM is provisioned, we use Bash scripts to automate the installation of se
 Logging & Error Handling
 Both Python and Bash scripts implement logging to track the provisioning and service configuration process:
 
-* Python Logging: The logging module writes logs to logs/provisioning.log.
-* Bash Logging: Logs are written to the terminal (stdout) and to logs/provisioning.log.
+* Python Logging: The logging module writes logs to logs/provisioning.log and supports structured logging in JSON format.
+* Bash Logging: Logs are written to the terminal (stdout) and simultaneously appended to logs/provisioning.log in a human-readable format.
 
 Example Logging:
-2025-03-17 09:52:30,370 - INFO - Script executed successfully.
+{"asctime": "17-03-2025 09:52:30", "name": "your_script_name.py", "levelname": "INFO", "message": "Script executed successfully."}
 
 
 Final Notes

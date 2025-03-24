@@ -2,20 +2,19 @@
 
 
 
-
 # Define log file
 LOG_FILE="logs/provisioning.log"
 
 
 # Function to log messages
 log_message() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
+    echo "{\"asctime\": \"$(date '+%d-%m-%Y %H:%M:%S')\", \"name\": \"scripts/config_json.sh\", \"levelname\": \"INFO\", \"message\": \"$1\"}" >> "$LOG_FILE"
 }
 
 
 # Function to handle errors and exit
 log_error() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - ERROR - $1" >> "$LOG_FILE"
+    echo "{\"asctime\": \"$(date '+%d-%m-%Y %H:%M:%S')\", \"name\": \"scripts/config_json.sh\", \"levelname\": \"ERROR\", \"message\": \"$1\"}" >> "$LOG_FILE"
     exit 1
 }
 
@@ -24,12 +23,10 @@ log_error() {
 
 {
 
-
-
     FILE_PATH="configs/instances.json"
 
 
-    if [! -f "$FILE_PATH" ]; then
+    if [ ! -f "$FILE_PATH" ]; then
         log_error "File does NOT exist: $FILE_PATH"
     fi
 
@@ -43,12 +40,6 @@ log_error() {
         cpu=$(echo "$machine" | jq -r '.cpu')
         memory=$(echo "$machine" | jq -r '.memory')
 
-
-        # print machine details
-        # echo "Machine Name: $machine_name"
-        # echo "Operating System: $oc"
-        # echo "CPU: $cpu"
-        # echo "Memory: $memory"
 
         echo "The new machine: '$machine_name' has been created!"
         log_message "New Machine -->  Name: $machine_name, OC: $oc, CPU: $cpu, Ram: $memory"
