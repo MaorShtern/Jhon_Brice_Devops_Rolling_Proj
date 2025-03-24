@@ -178,12 +178,6 @@ def create_new_machine(machine_name,oc,cpu,memory):
 
 
 
-# This function takes an object (obj) and returns its __dict__, which is a dictionary of the object's attributes. '
-# This is needed because json.dumps() can't directly convert custom objects into JSON. 
-# So, we first change them into a dictionary that json.dumps() can handle.
-def obj_dict(obj):
-    return obj.__dict__
-
 
 # json.dumps(list_name, default=obj_dict) is used to convert Python objects into JSON strings. 
 # By default, json.dumps() can only handle basic types like strings, numbers, lists, and dictionaries. 
@@ -201,7 +195,9 @@ def Write_To_JSON_File():
 
 
         # The indent=4 argument ensures that the output is formatted nicely with an indentation level of 4 spaces.
-        json_string = json.dumps(machines_list, default=obj_dict, indent=4)
+        # the lambada is an anonymous function that call for the __dict__ of every object in the list
+        # the __dict__ is a dictionary of the object data that JSON can handle
+        json_string = json.dumps(machines_list, default=lambda o: o.__dict__, indent=4)
 
 
         with open(file_path , 'w') as file:

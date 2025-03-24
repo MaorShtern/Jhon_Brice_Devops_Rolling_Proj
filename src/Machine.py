@@ -19,8 +19,5 @@ class Machine():
     
 
 
-    # def print_machine(self):
-    #     print(f"Name: {self.machine_name} , OC: {self.oc} , CPU: {self.cpu} , RAM: {self.memory}")
-
 
 
