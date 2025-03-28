@@ -1,8 +1,14 @@
 [
     {
-        "machine_name": "maor_1",
-        "oc": "Windows",
+        "machine_name": "maor_2",
+        "oc": "Ubuntu",
         "cpu": 4,
-        "memory": 4
+        "memory": 12
+    },
+    {
+        "machine_name": "maor_333",
+        "oc": "centos",
+        "cpu": 1,
+        "memory": 211213
     }
 ]
