@@ -1,6 +1,8 @@
 import logging
 import json
 
+
+
 class JSONFormatter(logging.Formatter):
     def __init__(self, date_format='%d-%m-%Y %H:%M:%S'):
         super().__init__()
